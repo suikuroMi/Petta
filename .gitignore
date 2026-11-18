@@ -37,6 +37,10 @@ yarn-error.log*
 # local sqlite database files
 /data/*.db*
 
+# generated AI training datasets & checkpoints
+/ai/data/*.jsonl
+/ai/petta-qwen2.5-3b-lora/
+
 # vercel
 .vercel
 
