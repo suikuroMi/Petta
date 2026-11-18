@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { formatAge, getSpeciesEmoji } from '@/lib/format';
 import type { Pet } from '@/types';
@@ -24,15 +24,16 @@ interface ChatMessage {
   sender: 'user' | 'assistant';
   text: string;
   urgent?: boolean;
+  source?: string;
 }
 
 const SAMPLE_PROMPTS = [
-  'How often should I brush my Golden Retriever?',
-  'Safe ear cleaning routine after bath time',
-  'My pet is having seizures and difficulty breathing',
+  'Pwede ba magbigay ng kanin at manok sa aso kong may konting diarrhea?',
+  'Gaano kadalas dapat paliguan yung Shih Tzu? Parang nangangati skin niya.',
+  'Nangingisay yung aso ko tapos nakakain ng dark chocolate!',
 ];
 
-export default function CareAssistantPlaceholderPage() {
+export default function CareAssistantPage() {
   const { data: pets = [] } = useQuery<Pet[]>({
     queryKey: ['my-pets'],
     queryFn: async () => (await api.get<Pet[]>('/pets')).data,
@@ -45,69 +46,90 @@ export default function CareAssistantPlaceholderPage() {
     {
       id: 'intro',
       sender: 'assistant',
-      text: 'Welcome to the Petta Guarded AI Care Assistant UI shell. Full LLM integration, domain training, and RAG knowledge grounding are scheduled for Phase 2. You can preview the emergency red-flag triage workflow and pet-context layout below.',
+      text: 'Kumusta! I am the Petta AI Care Assistant (powered by fine-tuned Qwen2.5-3B + Petta safety guardrails). Ask me pet wellness, nutrition, or hygiene questions in English, Taglish, or Filipino dialects.',
     },
   ]);
 
   const activePet =
     pets.find((p) => String(p.pet_id) === selectedPetId) || pets[0] || null;
 
+  const chatMutation = useMutation({
+    mutationFn: async (query: string) => {
+      const history = messages
+        .filter((m) => m.id !== 'intro')
+        .slice(-6)
+        .map((m) => ({
+          role: m.sender === 'user' ? ('user' as const) : ('assistant' as const),
+          content: m.text,
+        }));
+
+      const res = await api.post<{
+        reply: string;
+        urgent: boolean;
+        source: string;
+      }>('/assistant', {
+        pet_id: activePet?.pet_id,
+        message: query,
+        history,
+      });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      msgSeqRef.current += 1;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a-${msgSeqRef.current}`,
+          sender: 'assistant',
+          text: data.reply,
+          urgent: data.urgent,
+          source: data.source,
+        },
+      ]);
+    },
+    onError: () => {
+      msgSeqRef.current += 1;
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `a-${msgSeqRef.current}`,
+          sender: 'assistant',
+          text: 'Could not reach the Petta AI assistant right now. Please try again in a moment.',
+        },
+      ]);
+    },
+  });
+
   const handleSend = (promptText?: string) => {
     const query = (promptText ?? input).trim();
-    if (!query) return;
-
-    const lower = query.toLowerCase();
-    const isUrgent =
-      lower.includes('seizure') ||
-      lower.includes('bleeding') ||
-      lower.includes('breathing') ||
-      lower.includes('toxin') ||
-      lower.includes('poison');
+    if (!query || chatMutation.isPending) return;
 
     msgSeqRef.current += 1;
-    const seq = msgSeqRef.current;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `u-${msgSeqRef.current}`,
+        sender: 'user',
+        text: query,
+      },
+    ]);
 
-    const userMsg: ChatMessage = {
-      id: `u-${seq}`,
-      sender: 'user',
-      text: query,
-    };
-
-    const replyMsg: ChatMessage = isUrgent
-      ? {
-          id: `a-${seq}`,
-          sender: 'assistant',
-          urgent: true,
-          text: `EMERGENCY ESCALATION PREVIEW: Your message mentions urgent red-flag symptoms${
-            activePet ? ` for ${activePet.name}` : ''
-          }. When Phase 2 AI Guardrails are active, Petta immediately halts home-care suggestions and directs you to book an urgent veterinary visit or contact an emergency clinic.`,
-        }
-      : {
-          id: `a-${seq}`,
-          sender: 'assistant',
-          text: `Phase 2 AI Placeholder: Once the Gemini API wrapper and veterinary care dataset are connected${
-            activePet
-              ? ` (contextualized for ${activePet.name} — ${activePet.species}, ${activePet.breed})`
-              : ''
-          }, this assistant will provide safe, non-diagnostic hygiene, diet, and wellness guidance with a mandatory veterinary disclaimer.`,
-        };
-
-    setMessages((prev) => [...prev, userMsg, replyMsg]);
     if (!promptText) setInput('');
+    chatMutation.mutate(query);
   };
 
   return (
     <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h1 className="text-xl md:text-2xl font-bold text-slate-900">
               AI Care Assistant
             </h1>
-            <Badge variant="secondary">Phase 2 — Training Pending</Badge>
+            <Badge variant="default">Qwen2.5-3B + Safety Guardrails</Badge>
           </div>
           <p className="text-xs text-slate-500 mt-0.5">
-            Guarded non-diagnostic home-care literacy UI shell with clinical escalation rules.
+            Non-diagnostic pet-care guidance in English &amp; Taglish with automatic emergency triage.
           </p>
         </div>
 
@@ -136,10 +158,9 @@ export default function CareAssistantPlaceholderPage() {
       <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-2.5">
         <ShieldAlert className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold">Clinical Safety Boundary (CS318 Sec. 1.5 &amp; 3.2.3):</span>{' '}
-          This assistant does not diagnose illnesses or prescribe medications. Model training and
-          API integration will be implemented in the next phase; emergency keyword triage preview is
-          active below.
+          <span className="font-bold">Clinical Safety Boundary:</span> This assistant does not
+          diagnose diseases or prescribe controlled medications. Emergency symptoms are flagged
+          immediately for in-person veterinary care.
         </div>
       </div>
 
@@ -147,32 +168,32 @@ export default function CareAssistantPlaceholderPage() {
         <CardHeader className="border-b border-slate-100 py-3.5 px-4 flex flex-row items-center justify-between">
           <CardTitle className="text-sm flex items-center gap-2">
             <Bot className="h-4 w-4 text-emerald-600" />
-            Care Chat Preview
+            Petta Care Chat
             {activePet && (
               <span className="text-xs font-normal text-slate-500">
                 • Context: {activePet.name} ({activePet.breed})
               </span>
             )}
           </CardTitle>
-          <span className="text-[11px] font-mono text-slate-400">UI Shell</span>
+          <span className="text-[11px] font-mono text-slate-400">
+            MinamiYuki1/petta-qwen2.5-3b-lora
+          </span>
         </CardHeader>
 
         <CardContent className="p-4 space-y-4">
-          <div className="space-y-3 min-h-[260px] max-h-[380px] overflow-y-auto pr-1">
+          <div className="space-y-3 min-h-[280px] max-h-[420px] overflow-y-auto pr-1">
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={
-                  m.sender === 'user' ? 'flex justify-end' : 'flex justify-start'
-                }
+                className={m.sender === 'user' ? 'flex justify-end' : 'flex justify-start'}
               >
                 <div
                   className={
                     m.sender === 'user'
-                      ? 'max-w-[82%] rounded-xl px-3.5 py-2.5 text-xs bg-emerald-600 text-white'
+                      ? 'max-w-[82%] rounded-xl px-3.5 py-2.5 text-xs bg-emerald-600 text-white whitespace-pre-wrap'
                       : m.urgent
-                      ? 'max-w-[88%] rounded-xl px-3.5 py-3 text-xs bg-red-50 border border-red-200 text-red-900 space-y-2'
-                      : 'max-w-[88%] rounded-xl px-3.5 py-2.5 text-xs bg-slate-100 text-slate-800'
+                      ? 'max-w-[88%] rounded-xl px-3.5 py-3 text-xs bg-red-50 border border-red-200 text-red-900 space-y-2 whitespace-pre-wrap'
+                      : 'max-w-[88%] rounded-xl px-3.5 py-2.5 text-xs bg-slate-100 text-slate-800 whitespace-pre-wrap'
                   }
                 >
                   {m.urgent && (
@@ -182,7 +203,7 @@ export default function CareAssistantPlaceholderPage() {
                   )}
                   <p className="leading-relaxed">{m.text}</p>
                   {m.urgent && (
-                    <Link href="/appointments/book" className="inline-block">
+                    <Link href="/appointments/book" className="inline-block pt-1">
                       <Button size="sm" variant="destructive">
                         Book Urgent Clinic Visit →
                       </Button>
@@ -191,26 +212,34 @@ export default function CareAssistantPlaceholderPage() {
                 </div>
               </div>
             ))}
+
+            {chatMutation.isPending && (
+              <div className="flex justify-start">
+                <div className="rounded-xl px-3.5 py-2.5 text-xs bg-slate-100 text-slate-500 italic">
+                  Petta AI is typing...
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Sample Prompt Chips */}
           <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
             <span className="text-[11px] text-slate-400 flex items-center gap-1 mr-1">
-              <Sparkles className="h-3 w-3" /> Test UI flow:
+              <Sparkles className="h-3 w-3" /> Try asking:
             </span>
             {SAMPLE_PROMPTS.map((q) => (
               <button
                 key={q}
                 type="button"
+                disabled={chatMutation.isPending}
                 onClick={() => handleSend(q)}
-                className="text-[11px] px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 transition-colors cursor-pointer"
+                className="text-[11px] px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200 transition-colors cursor-pointer disabled:opacity-50"
               >
                 {q}
               </button>
             ))}
           </div>
 
-          {/* Input Box */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -221,9 +250,10 @@ export default function CareAssistantPlaceholderPage() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a home care question (Phase 2 model hookup pending)..."
+              placeholder="Ask in English, Taglish, or Filipino..."
+              disabled={chatMutation.isPending}
             />
-            <Button type="submit" size="sm">
+            <Button type="submit" size="sm" disabled={chatMutation.isPending || !input.trim()}>
               <Send className="h-3.5 w-3.5" /> Send
             </Button>
           </form>
