@@ -176,7 +176,7 @@ CURATED_PETTA_EXAMPLES: list[dict[str, str]] = [
 def extract_qa_pair(row: dict[str, Any]) -> tuple[str, str] | None:
     """Normalizes varying column names across Hugging Face QA datasets."""
     q_keys = ("question", "instruction", "prompt", "query", "input", "user", "Symptom", "symptoms")
-    a_keys = ("answer", "output", "response", "completion", "assistant", "reply", "advice")
+    a_keys = ("gold_answer", "answer", "output", "response", "completion", "assistant", "reply", "advice")
 
     if "messages" in row and isinstance(row["messages"], list):
         user_msg = next((m.get("content", "") for m in row["messages"] if m.get("role") == "user"), "")
