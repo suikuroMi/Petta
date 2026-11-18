@@ -1,0 +1,20 @@
+databases:
+  - name: petta-db
+    databaseName: petta
+    user: petta_user
+    plan: free
+
+services:
+  - type: web
+    name: petta-prototype
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: petta-db
+          property: connectionString
