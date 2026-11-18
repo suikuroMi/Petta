@@ -222,14 +222,18 @@ def main() -> None:
             records.append(make_chatml_record(ex["user"], ex["assistant"], "petta_curated_taglish"))
     print(f"Added {len(records)} curated Petta Taglish/guardrail records.")
 
-    # 2. humane-lab/PetQA
+    # 2. humane-lab/PetQA (load TEXT_ONLY split explicitly to avoid schema mismatch with TEXT_w_IMAGE)
     vet_count = 0
     try:
-        print("Loading humane-lab/PetQA...")
-        ds_petqa = load_dataset("humane-lab/PetQA", split="train")
+        print("Loading humane-lab/PetQA (TEXT_ONLY)...")
+        ds_petqa = load_dataset(
+            "humane-lab/PetQA",
+            data_files={"train": "data/TEXT_ONLY/train.json"},
+            split="train",
+        )
         ds_petqa = ds_petqa.shuffle(seed=args.seed)
         for row in ds_petqa:
-            if vet_count >= args.max_vet // 2:
+            if vet_count >= args.max_vet:
                 break
             pair = extract_qa_pair(row)
             if not pair:
