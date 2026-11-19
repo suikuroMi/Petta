@@ -170,6 +170,36 @@ CURATED_PETTA_EXAMPLES: list[dict[str, str]] = [
             "Kung may dugo sa dumi, nagsusuka, nanghihina, o tumagal nang mahigit 24–48 oras, dalhin agad sa vet." + DISCLAIMER_EN
         ),
     },
+    {
+        "user": "How often should I bathe my dog?",
+        "assistant": (
+            "For most healthy dogs, bathing **once every 3 to 4 weeks** (or roughly once a month) is ideal. "
+            "Bathing too frequently can strip natural skin oils and cause dryness or itching.\n\n"
+            "**Bathing tips:**\n"
+            "- Use a mild, vet-approved **dog-specific shampoo** (never human shampoo).\n"
+            "- Rinse thoroughly and dry the coat and ears completely to prevent skin or ear infections.\n"
+            "- Brush your dog's coat regularly between baths to remove loose fur and dirt." + DISCLAIMER_EN
+        ),
+    },
+    {
+        "user": "Ilang beses dapat paliguan ang pusa?",
+        "assistant": (
+            "Karaniwan ay **hindi kailangan paliguan nang madalas** ang mga pusa dahil nililinis nila ang sarili "
+            "nila araw-araw. Para sa karamihan ng indoor cats, sapat na ang pagligo **tuwing 2 hanggang 3 buwan** "
+            "o kapag nadumihan lang talaga (halimbawa may nadikit na dumi o langis).\n\n"
+            "- Gumamit lamang ng **cat-specific shampoo** at maligamgam na tubig.\n"
+            "- Patuyuin agad gamit ang tuwalya sa mainit at tahimik na lugar para hindi ma-stress." + DISCLAIMER_EN
+        ),
+    },
+    {
+        "user": "Pwede ba pakainin ng sibuyas o bawang yung aso?",
+        "assistant": (
+            "**Hindi po.** Ang sibuyas, bawang, chives, at leeks (hilaw man o luto) ay **nakakalason** sa aso at pusa "
+            "dahil maaari itong makasira ng red blood cells at magdulot ng anemia.\n\n"
+            "Kung nakakain siya ng pagkaing may maraming sibuyas o bawang, obserbahan kung may pagsusuka, "
+            "panghihina, o maputlang gilagid, at makipag-ugnayan agad sa vet." + DISCLAIMER_EN
+        ),
+    },
 ]
 
 
@@ -247,51 +277,8 @@ def main() -> None:
     except Exception as exc:
         print(f"Warning: Could not load humane-lab/PetQA ({exc})")
 
-    # 3. viggovet/Veterinary-Med
-    viggo_count = 0
-    try:
-        print("Loading viggovet/Veterinary-Med...")
-        ds_viggo = load_dataset("viggovet/Veterinary-Med", split="train")
-        ds_viggo = ds_viggo.shuffle(seed=args.seed)
-        for row in ds_viggo:
-            if vet_count + viggo_count >= args.max_vet:
-                break
-            pair = extract_qa_pair(row)
-            if not pair:
-                continue
-            q, a = pair
-            if not a.endswith("Petta.*"):
-                a = a + DISCLAIMER_EN
-            records.append(make_chatml_record(q, a, "viggovet/Veterinary-Med"))
-            viggo_count += 1
-        print(f"Loaded {viggo_count} examples from viggovet/Veterinary-Med.")
-    except Exception as exc:
-        print(f"Warning: Could not load viggovet/Veterinary-Med ({exc})")
-
-    # 4. rhyliieee/tagalog-filipino-english-translation (Filipino language fluency grounding)
-    fil_count = 0
-    try:
-        print("Loading rhyliieee/tagalog-filipino-english-translation...")
-        ds_fil = load_dataset("rhyliieee/tagalog-filipino-english-translation", split="train")
-        ds_fil = ds_fil.shuffle(seed=args.seed)
-        for row in ds_fil:
-            if fil_count >= args.max_filipino:
-                break
-            # Support common translation/instruction columns
-            en = row.get("en") or row.get("english") or row.get("input") or row.get("prompt")
-            tl = row.get("tl") or row.get("filipino") or row.get("tagalog") or row.get("output") or row.get("response")
-            if en and tl and len(str(en).strip()) > 8 and len(str(tl).strip()) > 8:
-                records.append(
-                    make_chatml_record(
-                        f"Translate or explain this in natural Tagalog/Filipino: {str(en).strip()}",
-                        str(tl).strip(),
-                        "rhyliieee/tagalog-filipino-english-translation",
-                    )
-                )
-                fil_count += 1
-        print(f"Loaded {fil_count} Filipino grounding examples.")
-    except Exception as exc:
-        print(f"Warning: Could not load tagalog-filipino-english-translation ({exc})")
+    # 3. Skip noisy non-pet translation corpora; Qwen2.5-3B-Instruct already understands Tagalog/Taglish natively.
+    # Instead, keep curated Taglish/dialect pet-care pairs + clean PetQA veterinary Q&A.
 
     rng.shuffle(records)
     split_idx = max(1, int(len(records) * 0.95))
