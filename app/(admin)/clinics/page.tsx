@@ -87,10 +87,10 @@ export default function AdminClinicsVerificationPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-6xl mx-auto px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-900">
+          <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 leading-tight">
             Clinic Governance &amp; Verification
           </h1>
           <p className="text-xs text-slate-500">
@@ -197,7 +197,7 @@ export default function AdminClinicsVerificationPage() {
       </Card>
 
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[min(calc(100vw-2rem),30rem)] max-h-[85dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Register Partner Clinic</DialogTitle>
           </DialogHeader>

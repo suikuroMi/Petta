@@ -393,7 +393,7 @@ export function AppendRecordModal({
 }: AppendRecordModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[min(calc(100vw-2rem),36rem)] max-h-[85dvh] overflow-y-auto">
         {open && (
           <AppendRecordForm
             key={`${defaultPet?.pet_id ?? 'none'}-${defaultApptId ?? 'none'}`}

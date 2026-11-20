@@ -61,8 +61,8 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-50">
-      <div className="w-full max-w-sm space-y-4">
+    <div className="min-h-[100dvh] w-full max-w-[100vw] overflow-x-hidden flex flex-col items-center justify-center p-[clamp(1rem,3vw,1.5rem)] bg-slate-50">
+      <div className="w-full max-w-[24rem] space-y-4">
         <Link
           href="/"
           className="text-xs font-semibold text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1"

@@ -53,9 +53,9 @@ function ClinicalRecordsContent() {
   const isVet = user?.role === 'vet';
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-6xl mx-auto px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       <div>
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900">
+        <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 leading-tight">
           Patient Medical &amp; Vaccination Ledger
         </h1>
         <p className="text-xs text-slate-500 mt-0.5">

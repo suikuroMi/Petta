@@ -11,9 +11,9 @@ const CLINIC_NAV = [
 
 export default function ClinicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+    <div className="min-h-[100dvh] w-full max-w-[100vw] overflow-x-hidden flex flex-col bg-slate-50 text-slate-900">
       <PortalNavbar portalTag="CLINIC PORTAL" navItems={CLINIC_NAV} />
-      <main className="flex-1 pb-20 md:pb-8">
+      <main className="flex-1 pb-[clamp(4.5rem,9vh,5.5rem)] md:pb-8 w-full max-w-[100vw] overflow-x-hidden">
         <AuthGuard allowedRoles={['vet', 'staff', 'admin']}>{children}</AuthGuard>
       </main>
     </div>

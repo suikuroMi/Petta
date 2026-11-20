@@ -40,7 +40,7 @@ export function DatePickerTime({
     return (
       <div>
         <p className="text-xs font-semibold text-slate-500 mb-2">{title}</p>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {items.map((slot) => {
             const isSelected = selectedTime === slot.time_slot;
             if (!slot.available) {
@@ -49,7 +49,7 @@ export function DatePickerTime({
                   key={slot.time_slot}
                   type="button"
                   disabled
-                  className="p-2.5 border border-slate-200 bg-slate-100 text-slate-400 rounded-lg text-left cursor-not-allowed opacity-70"
+                  className="p-[clamp(0.5rem,1.5vw,0.625rem)] border border-slate-200 bg-slate-100 text-slate-400 rounded-lg text-left cursor-not-allowed opacity-70"
                 >
                   <div className="text-xs font-semibold line-through">{slot.label}</div>
                   <div className="text-[10px] text-red-500 font-semibold">
@@ -65,7 +65,7 @@ export function DatePickerTime({
                 type="button"
                 onClick={() => onTimeChange(slot.time_slot)}
                 className={cn(
-                  'p-2.5 rounded-lg text-left transition-all cursor-pointer',
+                  'p-[clamp(0.5rem,1.5vw,0.625rem)] rounded-lg text-left transition-all cursor-pointer',
                   isSelected
                     ? 'border-2 border-emerald-600 bg-emerald-50 text-emerald-900 shadow-xs'
                     : 'border border-slate-200 hover:border-emerald-300 bg-white text-slate-800'
@@ -89,15 +89,15 @@ export function DatePickerTime({
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-[clamp(1rem,3vw,1.5rem)] items-start w-full">
       {/* Mini Interactive Calendar */}
-      <div className="border border-slate-200 rounded-xl p-3 bg-slate-50/60 flex flex-col items-center">
+      <div className="w-full border border-slate-200 rounded-xl p-[clamp(0.5rem,2vw,0.875rem)] bg-slate-50/70 flex flex-col items-center overflow-x-auto">
         <Calendar
           mode="single"
           selected={selectedDate}
           onSelect={onDateChange}
           disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-          className="w-full flex justify-center"
+          className="w-full max-w-full flex justify-center"
         />
         {selectedDateStr && (
           <p className="text-xs text-emerald-700 font-semibold mt-2 pb-1 flex items-center gap-1.5">

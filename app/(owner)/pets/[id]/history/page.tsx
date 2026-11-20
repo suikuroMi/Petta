@@ -61,7 +61,7 @@ export default function PetHealthPassportPage({
   ];
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-5">
+    <div className="w-full max-w-5xl mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2vh,1.25rem)] overflow-x-hidden">
       <Link
         href="/pets"
         className="no-print text-xs font-semibold text-slate-500 hover:text-emerald-600 inline-flex items-center gap-1"
