@@ -115,7 +115,7 @@ function BookAppointmentContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-4xl mx-auto px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       <div>
         <Link
           href="/appointments"
@@ -123,7 +123,7 @@ function BookAppointmentContent() {
         >
           <ArrowLeft className="h-3.5 w-3.5" /> Back to Appointments
         </Link>
-        <h1 className="text-xl md:text-2xl font-bold text-slate-900 mt-2">
+        <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 mt-2 leading-tight">
           Book a Clinic Appointment
         </h1>
         <p className="text-xs text-slate-500">

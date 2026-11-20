@@ -221,7 +221,7 @@ export default function ClinicDashboard() {
   const isVet = user?.role === 'vet';
 
   return (
-    <div className="max-w-6xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-6xl mx-auto px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       {/* Metric Cards / Capacity Management */}
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
         <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
@@ -507,7 +507,7 @@ export default function ClinicDashboard() {
 
       {/* Walk-In Booking Modal */}
       <Dialog open={walkinOpen} onOpenChange={setWalkinOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[min(calc(100vw-2rem),42rem)] max-h-[85dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Register Walk-In Appointment</DialogTitle>
           </DialogHeader>
@@ -596,7 +596,7 @@ export default function ClinicDashboard() {
         open={!!rescheduleTarget}
         onOpenChange={(open) => !open && setRescheduleTarget(null)}
       >
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-[min(calc(100vw-2rem),42rem)] max-h-[85dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               Reschedule Patient — {rescheduleTarget?.pet_name}

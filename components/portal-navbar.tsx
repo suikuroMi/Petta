@@ -50,7 +50,7 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
 
   return (
     <>
-      <header className="no-print bg-white border-b border-slate-200 px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-30">
+      <header className="no-print bg-white/95 backdrop-blur-md border-b border-slate-200 px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.5rem,1.5vh,0.75rem)] flex items-center justify-between sticky top-0 z-30 w-full max-w-[100vw]">
         <div className="flex items-center gap-5">
           <Link
             href="/"
@@ -107,8 +107,11 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
                     )}
                   </button>
                 </PopoverTrigger>
-                <PopoverContent align="end" className="w-80 p-0">
-                  <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-slate-100">
+                <PopoverContent
+                  align="end"
+                  className="w-[min(20rem,calc(100vw-1.5rem))] max-w-[calc(100vw-1.5rem)] p-0 overflow-hidden bg-white/95 backdrop-blur-md shadow-xl border-slate-200"
+                >
+                  <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-slate-100 bg-white sticky top-0 z-10">
                     <span className="text-xs font-bold text-slate-900">
                       Reminders &amp; Alerts ({unreadCount} unread)
                     </span>
@@ -122,7 +125,7 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
                       </button>
                     )}
                   </div>
-                  <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+                  <div className="max-h-[min(18rem,45dvh)] overflow-y-auto divide-y divide-slate-100 bg-white">
                     {notifications.length === 0 ? (
                       <p className="p-4 text-xs text-slate-500 text-center">
                         No active reminders right now.
@@ -166,7 +169,10 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
                     </div>
                   </button>
                 </PopoverTrigger>
-                <PopoverContent align="end" className="w-60 p-3 space-y-3">
+                <PopoverContent
+                  align="end"
+                  className="w-[min(16rem,calc(100vw-1.5rem))] max-w-[calc(100vw-1.5rem)] p-3 space-y-3 bg-white/95 backdrop-blur-md shadow-xl border-slate-200"
+                >
                   <div className="border-b border-slate-100 pb-2">
                     <p className="text-xs font-bold text-slate-900">{user.full_name}</p>
                     <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
@@ -202,7 +208,7 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
         </div>
       </header>
 
-      <nav className="no-print md:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-slate-200 flex items-center justify-around py-2 px-1">
+      <nav className="no-print md:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-slate-200 flex items-center justify-around py-[clamp(0.375rem,1vh,0.625rem)] px-1 w-full max-w-[100vw] shadow-lg">
         {navItems.map((item) => {
           const active =
             pathname === item.href ||

@@ -130,10 +130,10 @@ export default function MyPetsPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-5xl mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-900">My Pets</h1>
+          <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 leading-tight">My Pets</h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Manage registered companion profiles and access their verified health ledgers.
           </p>
@@ -269,7 +269,7 @@ export default function MyPetsPage() {
 
       {/* Create / Edit Pet Dialog */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="w-[min(calc(100vw-2rem),28rem)] max-h-[85dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingPet ? `Edit ${editingPet.name}` : 'Register New Pet'}</DialogTitle>
           </DialogHeader>

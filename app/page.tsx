@@ -55,8 +55,8 @@ export default function LandingPage() {
   const { data: user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="bg-white border-b border-slate-200 px-4 md:px-8 py-3.5 flex items-center justify-between sticky top-0 z-20">
+    <div className="min-h-[100dvh] w-full max-w-[100vw] overflow-x-hidden bg-slate-50 text-slate-900">
+      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200 px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(0.5rem,1.5vh,0.875rem)] flex items-center justify-between sticky top-0 z-20 w-full max-w-[100vw]">
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-emerald-600 tracking-tight flex items-center gap-1.5">
             🐾 Petta
@@ -88,11 +88,11 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main className="max-w-6xl mx-auto px-4 md:px-8 py-10 space-y-12">
-        <section className="bg-white border border-slate-200 rounded-2xl p-6 md:p-10 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <main className="w-full max-w-6xl mx-auto px-[clamp(1rem,3vw,2rem)] py-[clamp(1.5rem,4vh,2.5rem)] space-y-[clamp(1.5rem,4vh,3rem)] overflow-x-hidden">
+        <section className="bg-white border border-slate-200 rounded-2xl p-[clamp(1rem,3vw,2.5rem)] shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
             <Badge variant="default">Centralized Pet Health &amp; Clinic Operations</Badge>
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-tight text-slate-900 leading-tight">
               Digital Vaccine Ledgers &amp; Capacity-Controlled Veterinary Booking
             </h1>
             <p className="text-sm md:text-base text-slate-600 leading-relaxed">

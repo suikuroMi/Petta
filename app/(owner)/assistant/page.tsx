@@ -119,11 +119,11 @@ export default function CareAssistantPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-5">
+    <div className="w-full max-w-4xl mx-auto px-[clamp(0.75rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(0.75rem,2vh,1.25rem)] overflow-x-hidden">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-xl md:text-2xl font-bold text-slate-900">
+            <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 leading-tight">
               AI Care Assistant
             </h1>
             <Badge variant="default">Qwen2.5-3B + Safety Guardrails</Badge>
@@ -181,7 +181,7 @@ export default function CareAssistantPage() {
         </CardHeader>
 
         <CardContent className="p-4 space-y-4">
-          <div className="space-y-3 min-h-[280px] max-h-[420px] overflow-y-auto pr-1">
+          <div className="space-y-3 min-h-[30vh] max-h-[50dvh] overflow-y-auto pr-1">
             {messages.map((m) => (
               <div
                 key={m.id}
@@ -190,10 +190,10 @@ export default function CareAssistantPage() {
                 <div
                   className={
                     m.sender === 'user'
-                      ? 'max-w-[82%] rounded-xl px-3.5 py-2.5 text-xs bg-emerald-600 text-white whitespace-pre-wrap'
+                      ? 'max-w-[min(85%,28rem)] rounded-xl px-3.5 py-2.5 text-xs bg-emerald-600 text-white whitespace-pre-wrap'
                       : m.urgent
-                      ? 'max-w-[88%] rounded-xl px-3.5 py-3 text-xs bg-red-50 border border-red-200 text-red-900 space-y-2 whitespace-pre-wrap'
-                      : 'max-w-[88%] rounded-xl px-3.5 py-2.5 text-xs bg-slate-100 text-slate-800 whitespace-pre-wrap'
+                      ? 'max-w-[min(92%,32rem)] rounded-xl px-3.5 py-3 text-xs bg-red-50 border border-red-200 text-red-900 space-y-2 whitespace-pre-wrap'
+                      : 'max-w-[min(92%,32rem)] rounded-xl px-3.5 py-2.5 text-xs bg-slate-100 text-slate-800 whitespace-pre-wrap'
                   }
                 >
                   {m.urgent && (

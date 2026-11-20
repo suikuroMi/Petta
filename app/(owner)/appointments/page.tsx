@@ -114,10 +114,10 @@ export default function MyAppointmentsPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 md:p-6 space-y-6">
+    <div className="w-full max-w-4xl mx-auto px-[clamp(1rem,3vw,1.5rem)] py-[clamp(1rem,2.5vh,1.75rem)] space-y-[clamp(1rem,2.5vh,1.5rem)] overflow-x-hidden">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-slate-900">Appointments</h1>
+          <h1 className="text-[clamp(1.25rem,4vw,1.75rem)] font-bold text-slate-900 leading-tight">Appointments</h1>
           <p className="text-xs text-slate-500 mt-0.5">
             Track real-time clinic approvals, check-in status, and reschedule visits.
           </p>
@@ -273,7 +273,7 @@ export default function MyAppointmentsPage() {
         open={!!rescheduleTarget}
         onOpenChange={(open) => !open && setRescheduleTarget(null)}
       >
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-[min(calc(100vw-2rem),42rem)] max-h-[85dvh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               Reschedule Visit — {rescheduleTarget?.pet_name}
