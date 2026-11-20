@@ -66,7 +66,7 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
             </span>
           )}
 
-          <nav className="hidden md:flex items-center gap-4 text-sm font-medium text-slate-600">
+          <nav className="hidden md:flex items-center gap-5 text-sm font-medium">
             {navItems.map((item) => {
               const active =
                 pathname === item.href ||
@@ -78,8 +78,10 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'transition-colors hover:text-emerald-600',
-                    active && 'text-emerald-600 font-semibold'
+                    'py-1 border-b-2 transition-all hover:text-emerald-600',
+                    active
+                      ? 'border-emerald-600 text-emerald-600 font-semibold'
+                      : 'border-transparent text-slate-600'
                   )}
                 >
                   {item.label}
@@ -220,8 +222,8 @@ export function PortalNavbar({ portalTag, navItems }: PortalNavbarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex flex-col items-center gap-0.5 text-[11px] font-medium px-2 py-1 rounded-md',
-                active ? 'text-emerald-600 font-bold' : 'text-slate-500'
+                'flex flex-col items-center gap-0.5 text-[11px] font-medium px-2 py-0.5 border-b-2 transition-all',
+                active ? 'text-emerald-600 font-bold border-emerald-600' : 'text-slate-500 border-transparent'
               )}
             >
               {portalTag ? <Shield className="h-4 w-4" /> : <PawPrint className="h-4 w-4" />}
